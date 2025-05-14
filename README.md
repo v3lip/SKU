@@ -66,7 +66,7 @@ mkdir uploads tmpUploads
 1. Start the backend server:
 ```bash
 cd server
-npm start
+node index.js
 ```
 
 2. Start the frontend development server:
@@ -75,9 +75,12 @@ cd client
 npm start
 ```
 
+When starting the server for the first time a user will be created with `admin:admin` as credentials.
+
 The application will be available at `http://localhost:3000`
 
 ## Project Structure
+```
 sku/
 ├── client/ # Frontend React application
 │ ├── public/ # Static files
@@ -87,6 +90,7 @@ sku/
 │ ├── tmpUploads/ # Temporary file storage
 │ └── index.js # Main server file
 └── README.md
+```
 
 ## Security Features
 
