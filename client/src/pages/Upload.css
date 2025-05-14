@@ -1,0 +1,121 @@
+/* Upload page styles */
+.upload-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+}
+
+.upload-card {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 420px;
+}
+
+.upload-card h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+  text-align: center;
+}
+
+.upload-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-card input[type="file"] {
+  margin-bottom: 1rem;
+}
+
+.upload-card input[type="password"] {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.upload-card input[type="password"]:focus {
+  border-color: var(--primary-color);
+}
+
+.upload-card button {
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #9b59b6, var(--primary-color));
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.upload-card button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.upload-card .message {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.upload-card .admin-link {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--secondary-color);
+}
+
+/* Drag & drop file area */
+.file-drop-area {
+  border: 2px dashed var(--primary-color);
+  border-radius: 6px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s;
+  margin-bottom: 1rem;
+}
+
+.file-drop-area.active {
+  background: rgba(155, 89, 182, 0.1);
+  border-color: var(--secondary-color);
+}
+
+.file-drop-area p {
+  margin: 0;
+  color: var(--text-secondary, #555);
+}
+
+.file-input {
+  display: none;
+}
+
+/* Display selected file name */
+.file-name {
+  font-weight: 500;
+  color: var(--text-main, #333);
+}
+
+/* Upload progress bar */
+.upload-progress {
+  width: 100%;
+  background: #eee;
+  border-radius: 4px;
+  height: 8px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.upload-progress-bar {
+  height: 100%;
+  background: var(--primary-color);
+  width: 0%;
+  transition: width 0.2s ease;
+} 

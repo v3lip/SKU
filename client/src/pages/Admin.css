@@ -1,0 +1,525 @@
+/* Admin page styles */
+.admin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+}
+
+.admin-card {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  width: 95%;
+  max-width: 1200px;
+}
+
+.admin-card h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+  text-align: center;
+}
+
+.admin-card form,
+.admin-card .admin-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.admin-card input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.admin-card input:focus {
+  border-color: var(--primary-color);
+}
+
+.admin-card button {
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #9b59b6, var(--primary-color));
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.admin-card button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.admin-list {
+  margin-top: 2rem;
+}
+
+.admin-list h3 {
+  color: var(--primary-color);
+  text-align: center;
+}
+
+.admin-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-list li {
+  padding: 0.5rem 0;
+}
+
+/* Key list layout and delete button styles */
+.admin-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.delete-button {
+  padding: 0.25rem 0.5rem;
+  background: var(--danger-color, #e74c3c);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background 0.3s ease;
+}
+
+.delete-button:hover {
+  background: var(--danger-hover-color, #c0392b);
+}
+
+/* Key info truncation and layout */
+.key-info {
+  flex: 1;
+  margin-right: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Keys table styles */
+.keys-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: fixed;
+}
+.keys-table th,
+.keys-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+.keys-table th {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+.key-cell {
+  position: relative;
+  cursor: pointer;
+  /* space for copy badge */
+  padding-right: 3rem;
+}
+
+/* Created At cell styling, same as key */
+.created-cell {
+  font-family: monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+/* Expires In cell styling */
+.expires-cell {
+  font-family: monospace;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  color: var(--text-secondary, #555);
+}
+
+/* Column widths */
+.keys-table th:first-child,
+.keys-table td:first-child {
+  width: 40%;
+}
+.keys-table th:nth-child(2),
+.keys-table td:nth-child(2) {
+  width: 20%;
+}
+.keys-table th:nth-child(3),
+.keys-table td:nth-child(3) {
+  width: 20%;
+}
+
+/* Placeholder for no upload keys */
+.no-keys {
+  text-align: center;
+  color: var(--text-secondary, #555);
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+/* Delete message styling */
+.delete-message {
+  margin: 1rem 0 0.5rem;
+  color: var(--danger-color, #e74c3c);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Inline confirm and cancel buttons */
+.confirm-button {
+  padding: 0.25rem 0.5rem;
+  background: var(--success-color, #27ae60);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.cancel-button {
+  padding: 0.25rem 0.5rem;
+  background: var(--danger-color, #e74c3c);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.confirm-button:hover {
+  background: #2ecc71;
+}
+.cancel-button:hover {
+  background: #c0392b;
+}
+
+/* Badge for newly generated key next to key in table */
+.new-key-badge {
+  background: var(--accent-color, #f1c40f);
+  color: var(--text-on-accent, #000);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+}
+
+/* Inline badge when key is copied */
+.copy-badge {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  background: var(--success-color, #27ae60);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  animation: fadeOut 2s ease forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* User form styles */
+.user-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  align-items: center;
+}
+.user-form input,
+.user-form select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 1 1 150px;
+}
+.user-form button {
+  padding: 0.5rem 1rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.user-form button:hover {
+  background: #8e44ad;
+}
+
+/* Users table styles */
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+.users-table th,
+.users-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  white-space: nowrap;
+}
+.users-table th {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Messages for user operations */
+.user-add-message {
+  color: var(--success-color, #27ae60);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+.user-delete-message {
+  color: var(--danger-color, #e74c3c);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+/* No users placeholder */
+.no-users {
+  text-align: center;
+  color: var(--text-secondary, #555);
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+/* Inline edit inputs in users table */
+.user-edit-input,
+.user-edit-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+/* Edit button styling */
+.edit-button {
+  padding: 0.25rem 0.5rem;
+  background: var(--accent-color, #3498db);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+.edit-button:hover {
+  background: #2980b9;
+}
+
+/* Message for edit operations */
+.user-edit-message {
+  color: var(--success-color, #27ae60);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+/* Password reset column */
+.reset-button {
+  padding: 0.25rem 0.5rem;
+  background: var(--warning-color, #f39c12);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.reset-button:hover {
+  background: #d35400;
+}
+
+.reset-pending {
+  color: var(--warning-color, #f39c12);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.user-reset-message {
+  color: var(--warning-color, #f39c12);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+/* Files table styles */
+.files-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: fixed;
+}
+.files-table th,
+.files-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  white-space: nowrap;
+}
+.files-table th {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Wrap long file names within first column */
+.files-table td:first-child {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Inline file edit input */
+.file-edit-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+/* Action buttons in files table */
+.preview-button,
+.download-button,
+.edit-button,
+.delete-button {
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.5rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+.preview-button:hover,
+.download-button:hover,
+.edit-button:hover {
+  background: #8e44ad;
+}
+.delete-button {
+  background: var(--danger-color, #e74c3c);
+}
+.delete-button:hover {
+  background: var(--danger-hover-color, #c0392b);
+}
+
+/* File operation messages */
+.file-delete-message,
+.file-edit-message {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.file-delete-message {
+  color: var(--danger-color, #e74c3c);
+}
+.file-edit-message {
+  color: var(--success-color, #27ae60);
+}
+
+/* No files placeholder */
+.no-files {
+  text-align: center;
+  color: var(--text-secondary, #555);
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown toggle button */
+.dropdown-toggle {
+  background: var(--card-bg);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.dropdown-toggle::after {
+  content: '▾';
+  display: inline-block;
+  margin-left: 0.25rem;
+  font-size: 0.65rem;
+}
+.dropdown-toggle:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 8rem;
+  background: var(--card-bg);
+  border-radius: 6px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  list-style: none;
+  padding: 0.25rem 0;
+  margin: 0;
+  z-index: 1000;
+  transform-origin: top right;
+  animation: dropdownEnter 0.15s ease-out;
+}
+@keyframes dropdownEnter {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Dropdown items */
+.dropdown-menu .dropdown-item {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: var(--text-main, #333);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.dropdown-menu .dropdown-item:hover {
+  background: var(--primary-color);
+  color: white;
+}
+.dropdown-menu .dropdown-item a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+/* Ensure table cells clip dropdown overflow */
+.admin-list, .files-table {
+  overflow: visible;
+} 
