@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Admin.css';
-const API_URL = 'http://localhost:5000';
+import { API_URL } from '../config';
 
 function Admin() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
@@ -197,14 +197,43 @@ function Admin() {
 
   // Copy key from the table and show inline badge
   const handleCopyFromList = (keyToCopy) => {
-    navigator.clipboard.writeText(keyToCopy)
-      .then(() => {
-        setCopiedKey(keyToCopy);
-        setTimeout(() => setCopiedKey(null), 2000);
-      })
-      .catch(() => {
-        // ignore copy errors
-      });
+    if (navigator.clipboard && window.isSecureContext) {
+      // Use clipboard API if available
+      navigator.clipboard.writeText(keyToCopy)
+        .then(() => {
+          setCopiedKey(keyToCopy);
+          setTimeout(() => setCopiedKey(null), 2000);
+        })
+        .catch(() => {
+          // Fallback to manual copy if clipboard API fails
+          fallbackCopy(keyToCopy);
+        });
+    } else {
+      // Fallback for non-secure contexts or when clipboard API is not available
+      fallbackCopy(keyToCopy);
+    }
+  };
+
+  // Fallback copy method
+  const fallbackCopy = (text) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+      document.execCommand('copy');
+      setCopiedKey(text);
+      setTimeout(() => setCopiedKey(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+    
+    document.body.removeChild(textArea);
   };
 
   // Logout handler
@@ -375,6 +404,29 @@ function Admin() {
       window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Download error', err);
+    }
+    setOpenActions(null);
+  };
+
+  // Add this helper function near the top of the component
+  const isPreviewableFile = (mimeType) => {
+    const previewableTypes = [
+      'image/',
+      'video/',
+      'application/pdf'
+    ];
+    return previewableTypes.some(type => mimeType.startsWith(type));
+  };
+
+  // Update the preview handler
+  const handlePreviewFile = (file) => {
+    const url = `${API_URL}/uploads/${file.storageName}`;
+    if (file.mimeType.startsWith('video/')) {
+      // For videos, open in a new tab with video player
+      window.open(url, '_blank');
+    } else {
+      // For images and PDFs, open directly
+      window.open(url, '_blank');
     }
     setOpenActions(null);
   };
@@ -620,7 +672,9 @@ function Admin() {
                             </button>
                             {openActions === f.id && (
                               <ul className="dropdown-menu">
-                                <li className="dropdown-item" onClick={() => { window.open(`${API_URL}/uploads/${f.storageName}`, '_blank'); setOpenActions(null); }}>Preview</li>
+                                {isPreviewableFile(f.mimeType) && (
+                                  <li className="dropdown-item" onClick={() => handlePreviewFile(f)}>Preview</li>
+                                )}
                                 <li className="dropdown-item" onClick={() => handleDownloadFile(f)}>Download</li>
                                 <li className="dropdown-item" onClick={() => handleEditFile(f)}>Edit</li>
                                 <li className="dropdown-item" onClick={() => handleDeleteFile(f.id)}>Delete</li>

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './Upload.css';
-const API_URL = 'http://localhost:5000';
+import { API_URL } from '../config';
 
 function Upload() {
   const [file, setFile] = useState(null);
@@ -35,25 +35,31 @@ function Upload() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file || !key) return;
-    // Initialize chunked upload
-    const chunkSize = 1 * 1024 * 1024; // 1MB
-    const totalChunks = Math.ceil(file.size / chunkSize);
-    const initRes = await fetch(`${API_URL}/api/upload/init`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key, originalName: file.name, totalChunks }),
-    });
-    if (!initRes.ok) {
-      const err = await initRes.json();
-      setMessage(`Error: ${err.message}`);
-      return;
-    }
-    const { uploadId } = await initRes.json();
-    // Upload chunks in parallel
-    let uploadedChunks = 0;
-    setUploadProgress(0);
-    await Promise.all(
-      Array.from({ length: totalChunks }).map(async (_, index) => {
+    try {
+      // Initialize chunked upload
+      const chunkSize = 1 * 1024 * 1024; // 1MB
+      const totalChunks = Math.ceil(file.size / chunkSize);
+      
+      // Step 1: Initialize upload
+      const initRes = await fetch(`${API_URL}/api/upload/init`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, originalName: file.name, totalChunks }),
+      });
+      
+      if (!initRes.ok) {
+        const err = await initRes.json();
+        throw new Error(`Failed to initialize upload: ${err.message}`);
+      }
+      
+      const { uploadId } = await initRes.json();
+      
+      // Step 2: Upload chunks
+      let uploadedChunks = 0;
+      setUploadProgress(0);
+      
+      // Upload chunks sequentially instead of in parallel
+      for (let index = 0; index < totalChunks; index++) {
         const start = index * chunkSize;
         const end = Math.min(start + chunkSize, file.size);
         const blob = file.slice(start, end);
@@ -61,24 +67,41 @@ function Upload() {
         form.append('chunk', blob);
         form.append('uploadId', uploadId);
         form.append('chunkIndex', index);
-        await fetch(`${API_URL}/api/upload/chunk`, { method: 'POST', body: form });
+        
+        const chunkRes = await fetch(`${API_URL}/api/upload/chunk`, { 
+          method: 'POST', 
+          body: form 
+        });
+        
+        if (!chunkRes.ok) {
+          throw new Error(`Failed to upload chunk ${index + 1}/${totalChunks}`);
+        }
+        
         uploadedChunks++;
         setUploadProgress(Math.round((uploadedChunks / totalChunks) * 100));
-      })
-    );
-    // Complete and assemble
-    const compRes = await fetch(`${API_URL}/api/upload/complete`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ uploadId, key }),
-    });
-    const data = await compRes.json();
-    if (compRes.ok) {
+      }
+      
+      // Step 3: Complete upload
+      const compRes = await fetch(`${API_URL}/api/upload/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uploadId, key }),
+      });
+      
+      if (!compRes.ok) {
+        const err = await compRes.json();
+        throw new Error(`Failed to complete upload: ${err.message}`);
+      }
+      
+      const data = await compRes.json();
       setMessage(`Upload successful! File ID: ${data.id}`);
-    } else {
-      setMessage(`Error: ${data.message}`);
+      
+    } catch (err) {
+      console.error('Upload error:', err);
+      setMessage(`Error: ${err.message}`);
+    } finally {
+      setUploadProgress(0);
     }
-    setUploadProgress(0);
   };
 
   const handleDrag = e => {

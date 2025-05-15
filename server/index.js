@@ -41,7 +41,11 @@ async function initDB() {
 initDB();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: ['http://192.168.1.163:3000', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Auth middleware
@@ -78,7 +82,20 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Serve uploaded files statically
-app.use('/uploads', express.static(uploadDir));
+app.use('/uploads', (req, res, next) => {
+  const filePath = path.join(uploadDir, req.path);
+  if (fs.existsSync(filePath)) {
+    const mimeType = mime.lookup(filePath) || 'application/octet-stream';
+    if (mimeType.startsWith('video/')) {
+      // Set headers for video streaming
+      res.setHeader('Content-Type', mimeType);
+      res.setHeader('Accept-Ranges', 'bytes');
+      // Don't force download for videos
+      res.setHeader('Content-Disposition', 'inline');
+    }
+  }
+  next();
+}, express.static(uploadDir));
 
 // Chunked upload setup
 const tmpDir = path.join(__dirname, 'tmpUploads');
