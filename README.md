@@ -85,6 +85,7 @@ When starting the server for the first time, a default admin user will be create
 - Password: `admin`
 
 The application will be available at `http://localhost:3000`
+If you run the server externaly you will have to change the IP here `client/src/config.js` to the correct IP to the server.
 
 ## Project Structure
 ```
