@@ -54,30 +54,72 @@ npm install
 
 ## Configuration
 
-1. Create necessary directories in the server folder:
-```bash
-mkdir uploads tmpUploads
+### Client Configuration
+The client configuration is in `client/src/config.js`:
+```javascript
+const config = {
+  API_URL: 'http://your-server-ip:5000',  // Change this to your server's IP and port
+  CHUNK_SIZE: 1 * 1024 * 1024,            // Adjust chunk size if needed
+  // ... other settings
+};
 ```
 
-2. Configure environment variables (if needed) in the server's `.env` file.
-
-## Running the Application
-
-1. Start the backend server:
+### Server Configuration
+1. Copy the example environment file:
 ```bash
 cd server
-node index.js
+cp .env.example .env
 ```
 
-2. Start the frontend development server:
+2. Edit the `.env` file with your settings:
+```env
+PORT=5000
+HOST=0.0.0.0
+JWT_SECRET=your_secure_secret_here
+```
+
+3. For production, make sure to:
+   - Set a strong JWT_SECRET
+   - Configure CORS_ORIGINS in `server/config.js` with your client URLs
+   - Change the default admin password after first login
+
+### Quick Deployment
+
+1. Clone and install:
 ```bash
+git clone https://github.com/v3lip/SKU.git
+cd SKU
+```
+
+2. Configure the client:
+```bash
+cd client
+# Edit src/config.js with your server's IP and port
+npm install
+```
+
+3. Configure the server:
+```bash
+cd ../server
+cp .env.example .env
+# Edit .env with your settings
+npm install
+```
+
+4. Start the services:
+```bash
+# Terminal 1 - Server
+cd server
+node index.js
+
+# Terminal 2 - Client
 cd client
 npm start
 ```
 
-When starting the server for the first time a user will be created with `admin:admin` as credentials.
-
-The application will be available at `http://localhost:3000`
+The application will be available at:
+- Client: http://localhost:3000
+- Server: http://your-server-ip:5000
 
 ## Project Structure
 ```
