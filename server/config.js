@@ -31,8 +31,6 @@ const config = {
     username: 'admin',
     password: 'admin',
     role: 'admin'
-<<<<<<< HEAD
-=======
   },
 
   // Database default data
@@ -40,7 +38,6 @@ const config = {
     users: [],
     files: [],
     uploadKeys: []
->>>>>>> temp-branch
   }
 };
 
