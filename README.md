@@ -150,7 +150,6 @@ sku/
 │   ├── uploads/          # Permanent file storage
 │   ├── tmpUploads/       # Temporary file storage
 │   ├── config.js         # Server configuration
-│   ├── .env              # Environment variables
 │   └── index.js          # Main server file
 └── README.md
 ```
