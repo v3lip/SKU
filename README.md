@@ -128,6 +128,11 @@ SKU/
 - File metadata management
 - Secure file storage
 
+## Images
+![image](https://github.com/user-attachments/assets/99cded14-b8a9-47a8-b87c-f69fed48849e)
+![image](https://github.com/user-attachments/assets/36563d56-dcff-4e0a-b689-d41993fc377d)
+
+
 ## Contributing
 
 1. Fork the repository
@@ -146,6 +151,5 @@ This project is licensed under the ISC License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Thanks to all contributors who have helped shape this project
 - Special thanks to the open-source community for the amazing tools and libraries
 
