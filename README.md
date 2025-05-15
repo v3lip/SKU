@@ -10,6 +10,9 @@ A secure file upload system that uses key-based authentication for file uploads.
 - 🔑 Key generation, validation, and deletion
 - 📱 Responsive design
 - 🔒 Secure file handling
+- 📁 File preview support for images, videos, and PDFs
+- ⚡ Chunked file uploads for large files
+- 🔄 Real-time upload progress tracking
 
 ## Tech Stack
 
@@ -18,6 +21,7 @@ A secure file upload system that uses key-based authentication for file uploads.
 - React Router DOM
 - Modern UI components
 - Drag-and-drop functionality
+- Chunked file upload handling
 
 ### Backend
 - Node.js
@@ -26,6 +30,7 @@ A secure file upload system that uses key-based authentication for file uploads.
 - Multer for file handling
 - JWT for authentication
 - bcrypt for security
+- MIME type detection
 
 ## Prerequisites
 
@@ -36,8 +41,8 @@ A secure file upload system that uses key-based authentication for file uploads.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/sku.git
-cd sku
+git clone https://github.com/v3lip/SKU.git
+cd SKU
 ```
 
 2. Install frontend dependencies:
@@ -75,22 +80,29 @@ cd client
 npm start
 ```
 
-When starting the server for the first time a user will be created with `admin:admin` as credentials.
+When starting the server for the first time, a default admin user will be created with:
+- Username: `admin`
+- Password: `admin`
 
 The application will be available at `http://localhost:3000`
 
 ## Project Structure
 ```
-sku/
+SKU/
 ├── client/ # Frontend React application
 │ ├── public/ # Static files
 │ └── src/ # React source code
+│ ├── pages/ # Page components
+│ ├── components/ # Reusable components
+│ └── config.js # Configuration file
 ├── server/ # Backend Node.js application
 │ ├── uploads/ # Permanent file storage
 │ ├── tmpUploads/ # Temporary file storage
+│ ├── db.json # Database file
 │ └── index.js # Main server file
 └── README.md
 ```
+
 
 ## Security Features
 
@@ -99,13 +111,21 @@ sku/
 - Temporary file storage for processing
 - Admin-only key management
 - JWT-based authentication for admin panel
+- Role-based access control (Admin, Moderator, User)
+- Password reset enforcement capability
+- Secure file type validation
 
-## Images
+## File Management
 
-![image](https://github.com/user-attachments/assets/b830d4eb-f332-4349-9af9-375b6244e357)
-![image](https://github.com/user-attachments/assets/1246d677-c06f-46c4-bb51-fd96d8d0d427)
-![image](https://github.com/user-attachments/assets/04f3ec5c-bb82-494c-b764-5ff515063249)
-
+- Support for all file types
+- Preview functionality for:
+  - Images (all formats)
+  - Videos (all formats)
+  - PDF documents
+- Chunked upload support for large files
+- Progress tracking during upload
+- File metadata management
+- Secure file storage
 
 ## Contributing
 
