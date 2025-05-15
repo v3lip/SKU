@@ -10,9 +10,6 @@ A secure file upload system that uses key-based authentication for file uploads.
 - 🔑 Key generation, validation, and deletion
 - 📱 Responsive design
 - 🔒 Secure file handling
-- 📁 File preview support for images, videos, and PDFs
-- ⚡ Chunked file uploads for large files
-- 🔄 Real-time upload progress tracking
 
 ## Tech Stack
 
@@ -21,7 +18,6 @@ A secure file upload system that uses key-based authentication for file uploads.
 - React Router DOM
 - Modern UI components
 - Drag-and-drop functionality
-- Chunked file upload handling
 
 ### Backend
 - Node.js
@@ -30,7 +26,6 @@ A secure file upload system that uses key-based authentication for file uploads.
 - Multer for file handling
 - JWT for authentication
 - bcrypt for security
-- MIME type detection
 
 ## Prerequisites
 
@@ -41,8 +36,8 @@ A secure file upload system that uses key-based authentication for file uploads.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/v3lip/SKU.git
-cd SKU
+git clone https://github.com/yourusername/sku.git
+cd sku
 ```
 
 2. Install frontend dependencies:
@@ -59,51 +54,85 @@ npm install
 
 ## Configuration
 
-1. Create necessary directories in the server folder:
-```bash
-mkdir uploads tmpUploads
+### Client Configuration
+The client configuration is in `client/src/config.js`:
+```javascript
+const config = {
+  API_URL: 'http://your-server-ip:5000',  // Change this to your server's IP and port
+  CHUNK_SIZE: 1 * 1024 * 1024,            // Adjust chunk size if needed
+  // ... other settings
+};
 ```
 
-2. Configure environment variables (if needed) in the server's `.env` file.
-
-## Running the Application
-
-1. Start the backend server:
+### Server Configuration
+1. Copy the example environment file:
 ```bash
 cd server
-node index.js
+cp .env.example .env
 ```
 
-2. Start the frontend development server:
+2. Edit the `.env` file with your settings:
+```env
+PORT=5000
+HOST=0.0.0.0
+JWT_SECRET=your_secure_secret_here
+```
+
+3. For production, make sure to:
+   - Set a strong JWT_SECRET
+   - Configure CORS_ORIGINS in `server/config.js` with your client URLs
+   - Change the default admin password after first login
+
+### Quick Deployment
+
+1. Clone and install:
 ```bash
+git clone https://github.com/v3lip/SKU.git
+cd SKU
+```
+
+2. Configure the client:
+```bash
+cd client
+# Edit src/config.js with your server's IP and port
+npm install
+```
+
+3. Configure the server:
+```bash
+cd ../server
+cp .env.example .env
+# Edit .env with your settings
+npm install
+```
+
+4. Start the services:
+```bash
+# Terminal 1 - Server
+cd server
+node index.js
+
+# Terminal 2 - Client
 cd client
 npm start
 ```
 
-When starting the server for the first time, a default admin user will be created with:
-- Username: `admin`
-- Password: `admin`
-
-The application will be available at `http://localhost:3000`
-If you run the server externaly you will have to change the IP here `client/src/config.js` to the correct IP to the server.
+The application will be available at:
+- Client: http://localhost:3000
+- Server: http://your-server-ip:5000
 
 ## Project Structure
 ```
-SKU/
+sku/
 ├── client/ # Frontend React application
 │ ├── public/ # Static files
 │ └── src/ # React source code
-│ ├── pages/ # Page components
-│ ├── components/ # Reusable components
-│ └── config.js # Configuration file
 ├── server/ # Backend Node.js application
 │ ├── uploads/ # Permanent file storage
 │ ├── tmpUploads/ # Temporary file storage
-│ ├── db.json # Database file
 │ └── index.js # Main server file
 └── README.md
 ```
-
 
 ## Security Features
 
@@ -112,25 +141,12 @@ SKU/
 - Temporary file storage for processing
 - Admin-only key management
 - JWT-based authentication for admin panel
-- Role-based access control (Admin, Moderator, User)
-- Password reset enforcement capability
-- Secure file type validation
-
-## File Management
-
-- Support for all file types
-- Preview functionality for:
-  - Images (all formats)
-  - Videos (all formats)
-  - PDF documents
-- Chunked upload support for large files
-- Progress tracking during upload
-- File metadata management
-- Secure file storage
 
 ## Images
-![image](https://github.com/user-attachments/assets/99cded14-b8a9-47a8-b87c-f69fed48849e)
-![image](https://github.com/user-attachments/assets/36563d56-dcff-4e0a-b689-d41993fc377d)
+
+![image](https://github.com/user-attachments/assets/b830d4eb-f332-4349-9af9-375b6244e357)
+![image](https://github.com/user-attachments/assets/1246d677-c06f-46c4-bb51-fd96d8d0d427)
+![image](https://github.com/user-attachments/assets/04f3ec5c-bb82-494c-b764-5ff515063249)
 
 
 ## Contributing
@@ -151,5 +167,6 @@ This project is licensed under the ISC License - see the LICENSE file for detail
 
 ## Acknowledgments
 
+- Thanks to all contributors who have helped shape this project
 - Special thanks to the open-source community for the amazing tools and libraries
 
