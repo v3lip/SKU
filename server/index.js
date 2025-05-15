@@ -9,20 +9,18 @@ const jwt = require('jsonwebtoken');
 const { Low } = require('lowdb');
 const { JSONFile } = require('lowdb/node');
 const mime = require('mime-types');
+const config = require('./config');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
 // Setup database
-const dbFile = path.join(__dirname, 'db.json');
+const dbFile = path.join(__dirname, config.DB_FILE);
 const adapter = new JSONFile(dbFile);
-const defaultData = { users: [], files: [], uploadKeys: [] };
-const db = new Low(adapter, defaultData);
+const db = new Low(adapter, config.DEFAULT_DATA);
 
 async function initDB() {
   await db.read();
-  db.data = db.data || defaultData;
+  db.data = db.data || config.DEFAULT_DATA;
   // Migrate existing users to include forcePasswordReset flag
   db.data.users = db.data.users.map(u => ({
     ...u,
@@ -30,11 +28,16 @@ async function initDB() {
   }));
   // Create default admin if none exists
   if (db.data.users.length === 0) {
-    const defaultPass = 'admin';
-    const hashed = await bcrypt.hash(defaultPass, 10);
+    const hashed = await bcrypt.hash(config.DEFAULT_ADMIN.password, 10);
     const id = uuidv4();
-    db.data.users.push({ id, username: 'admin', password: hashed, role: 'admin', forcePasswordReset: false });
-    console.log(`Default admin created. Username: admin, Password: ${defaultPass}`);
+    db.data.users.push({ 
+      id, 
+      username: config.DEFAULT_ADMIN.username, 
+      password: hashed, 
+      role: config.DEFAULT_ADMIN.role, 
+      forcePasswordReset: false 
+    });
+    console.log(`Default admin created. Username: ${config.DEFAULT_ADMIN.username}, Password: ${config.DEFAULT_ADMIN.password}`);
   }
   await db.write();
 }
@@ -42,7 +45,7 @@ initDB();
 
 // Middlewares
 app.use(cors({
-  origin: ['http://192.168.1.163:3000', 'http://localhost:3000'],
+  origin: config.CORS_ORIGINS,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -54,7 +57,7 @@ const auth = (allowedRoles = []) => async (req, res, next) => {
   if (!authHeader) return res.status(401).json({ message: 'No authorization header' });
   const token = authHeader.split(' ')[1];
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
+    const payload = jwt.verify(token, config.JWT_SECRET);
     await db.read();
     const user = db.data.users.find(u => u.id === payload.id);
     if (!user) return res.status(401).json({ message: 'User not found' });
@@ -69,7 +72,7 @@ const auth = (allowedRoles = []) => async (req, res, next) => {
 };
 
 // Setup uploads directory
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = path.join(__dirname, config.UPLOAD_DIR);
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
@@ -113,8 +116,7 @@ app.post('/api/admin/login', async (req, res) => {
   if (!user) return res.status(400).json({ message: 'Invalid credentials' });
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) return res.status(400).json({ message: 'Invalid credentials' });
-  // Allow all roles (user, moderator, admin) to login for key generation and file management based on role
-  const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ id: user.id, role: user.role }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRY });
   res.json({
     id: user.id,
     username: user.username,
@@ -243,8 +245,8 @@ app.post('/api/upload/validate', async (req, res) => {
   }
   const now = new Date();
   const createdAt = new Date(keyEntry.createdAt);
-  // Check key expiry (24 hours)
-  if (now - createdAt > 24 * 60 * 60 * 1000) {
+  // Check key expiry
+  if (now - createdAt > config.KEY_EXPIRY) {
     // Remove expired key
     db.data.uploadKeys = db.data.uploadKeys.filter(k => k.key !== key);
     await db.write();
@@ -379,6 +381,6 @@ app.post('/api/upload/complete', async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(config.PORT, config.HOST, () => {
+  console.log(`Server running on port ${config.PORT}`);
 }); 

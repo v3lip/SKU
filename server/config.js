@@ -31,6 +31,13 @@ const config = {
     username: 'admin',
     password: 'admin',
     role: 'admin'
+  },
+
+  // Database default data
+  DEFAULT_DATA: {
+    users: [],
+    files: [],
+    uploadKeys: []
   }
 };
 
