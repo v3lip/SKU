@@ -10,6 +10,8 @@ A secure file upload system that uses key-based authentication for file uploads.
 - 🔑 Key generation, validation, and deletion
 - 📱 Responsive design
 - 🔒 Secure file handling
+- 🌐 Environment-based configuration
+- 🔄 Automatic development/production mode switching
 
 ## Tech Stack
 
@@ -36,7 +38,7 @@ A secure file upload system that uses key-based authentication for file uploads.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/sku.git
+git clone https://github.com/v3lip/sku.git
 cd sku
 ```
 
@@ -58,14 +60,36 @@ npm install
 The client configuration is in `client/src/config.js`:
 ```javascript
 const config = {
+<<<<<<< HEAD
   API_URL: 'http://your-server-ip:5000',  // Change this to your server's IP and port
   CHUNK_SIZE: 1 * 1024 * 1024,            // Adjust chunk size if needed
   // ... other settings
+=======
+  // Server connection
+  API_URL: process.env.NODE_ENV === 'development' 
+    ? 'http://localhost:5000'  // Development server
+    : 'http://your-server-ip:5000',  // Production server
+  
+  // Upload settings
+  CHUNK_SIZE: 1 * 1024 * 1024,  // 1MB chunks for file uploads
+  
+  // UI settings
+  MAX_FILE_NAME_LENGTH: 50,     // Maximum length for displayed file names
+  UPLOAD_TIMEOUT: 30000,        // Upload timeout in milliseconds (30 seconds)
+  
+  // Preview settings
+  PREVIEWABLE_TYPES: [
+    'image/',
+    'video/',
+    'application/pdf'
+  ]
+>>>>>>> temp-branch
 };
 ```
 
 ### Server Configuration
 1. Copy the example environment file:
+<<<<<<< HEAD
 ```bash
 cd server
 cp .env.example .env
@@ -108,6 +132,110 @@ npm install
 
 4. Start the services:
 ```bash
+=======
+```javascript
+// Server configuration
+const config = {
+  // Server settings
+  PORT: process.env.PORT || 5000,
+  HOST: process.env.HOST || '0.0.0.0',  // Listen on all network interfaces
+
+  // Security
+  JWT_SECRET: process.env.JWT_SECRET || 'your_jwt_secret',  // Change this in production!
+  JWT_EXPIRY: '1h',  // JWT token expiry time
+
+  // File upload settings
+  UPLOAD_DIR: 'uploads',
+  TMP_UPLOAD_DIR: 'tmpUploads',
+  MAX_FILE_SIZE: 1024 * 1024 * 1024,  // 1GB max file size
+  ALLOWED_FILE_TYPES: '*',  // Allow all file types, or specify like: ['image/*', 'video/*', 'application/pdf']
+
+  // Key settings
+  KEY_EXPIRY: 24 * 60 * 60 * 1000,  // 24 hours in milliseconds
+
+  // Database
+  DB_FILE: 'db.json',
+
+  // CORS settings
+  CORS_ORIGINS: [
+    'http://localhost:3000', // Development server
+    'http://192.168.1.163:3000'  // Production server
+  ],
+
+  // Default admin account (created on first run)
+  DEFAULT_ADMIN: {
+    username: 'admin',
+    password: 'admin',
+    role: 'admin'
+  },
+
+  // Database default data
+  DEFAULT_DATA: {
+    users: [],
+    files: [],
+    uploadKeys: []
+  }
+};
+```
+
+2. The server configuration is in `server/config.js`:
+```javascript
+const config = {
+  // Server settings
+  PORT: process.env.PORT || 5000,
+  HOST: process.env.HOST || '0.0.0.0',
+  
+  // Security
+  JWT_SECRET: process.env.JWT_SECRET || 'your_jwt_secret',
+  JWT_EXPIRY: '1h',
+  
+  // File upload settings
+  UPLOAD_DIR: 'uploads',
+  TMP_UPLOAD_DIR: 'tmpUploads',
+  MAX_FILE_SIZE: 1024 * 1024 * 1024,  // 1GB max file size
+  
+  // Key settings
+  KEY_EXPIRY: 24 * 60 * 60 * 1000,  // 24 hours
+  
+  // CORS settings
+  CORS_ORIGINS: [
+    'http://localhost:3000', // Development server
+    'http://123.123.123.123:3000' // Production server
+  ]
+};
+```
+
+4. For production, make sure to:
+   - Set a strong JWT_SECRET in your config file
+   - Configure CORS_ORIGINS in `server/config.js` with your client URLs
+   - Change the default admin password after first login
+   - Update the API_URL in client config for production
+
+### Quick Deployment
+
+1. Clone and install:
+```bash
+git clone https://github.com/v3lip/SKU.git
+cd SKU
+```
+
+2. Configure the client:
+```bash
+cd client
+# Edit src/config.js with your server's IP and port
+npm install
+```
+
+3. Configure the server:
+```bash
+cd server
+# Edit .env with your settings
+npm install
+```
+
+4. Start the services:
+```bash
+>>>>>>> temp-branch
 # Terminal 1 - Server
 cd server
 node index.js
@@ -118,19 +246,28 @@ npm start
 ```
 
 The application will be available at:
+<<<<<<< HEAD
 - Client: http://localhost:3000
 - Server: http://your-server-ip:5000
+=======
+- Client: http://localhost:3000 (development) or your configured production URL
+- Server: http://localhost:5000 (development) or your configured production URL
+>>>>>>> temp-branch
 
 ## Project Structure
 ```
 sku/
-├── client/ # Frontend React application
-│ ├── public/ # Static files
-│ └── src/ # React source code
-├── server/ # Backend Node.js application
-│ ├── uploads/ # Permanent file storage
-│ ├── tmpUploads/ # Temporary file storage
-│ └── index.js # Main server file
+├── client/                 # Frontend React application
+│   ├── public/            # Static files
+│   └── src/              # React source code
+│       ├── config.js     # Client configuration
+│       └── pages/        # React components
+├── server/                # Backend Node.js application
+│   ├── uploads/          # Permanent file storage
+│   ├── tmpUploads/       # Temporary file storage
+│   ├── config.js         # Server configuration
+│   ├── .env              # Environment variables
+│   └── index.js          # Main server file
 └── README.md
 ```
 
@@ -141,13 +278,16 @@ sku/
 - Temporary file storage for processing
 - Admin-only key management
 - JWT-based authentication for admin panel
+- Environment-based configuration
+- CORS protection
+- Configurable file size limits
+- Automatic key expiration
 
 ## Images
 
 ![image](https://github.com/user-attachments/assets/b830d4eb-f332-4349-9af9-375b6244e357)
 ![image](https://github.com/user-attachments/assets/1246d677-c06f-46c4-bb51-fd96d8d0d427)
 ![image](https://github.com/user-attachments/assets/04f3ec5c-bb82-494c-b764-5ff515063249)
-
 
 ## Contributing
 

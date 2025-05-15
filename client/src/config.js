@@ -1,7 +1,13 @@
 // Server configuration
 const config = {
   // Server connection
+<<<<<<< HEAD
   API_URL: 'http://192.168.1.163:5000',  // Change this to your server's IP and port
+=======
+  API_URL: process.env.NODE_ENV === 'development' 
+    ? 'http://localhost:5000'  // Development server
+    : 'http://192.168.1.163:5000',  // Production server
+>>>>>>> temp-branch
   
   // Upload settings
   CHUNK_SIZE: 1 * 1024 * 1024,  // 1MB chunks for file uploads
@@ -18,6 +24,13 @@ const config = {
   ]
 };
 
+<<<<<<< HEAD
+=======
+// Export individual values
+export const { API_URL, CHUNK_SIZE, MAX_FILE_NAME_LENGTH, UPLOAD_TIMEOUT, PREVIEWABLE_TYPES } = config;
+
+// Also export the entire config object as default for backward compatibility
+>>>>>>> temp-branch
 export default config;
 
 // You can change the IP address here to point to your server

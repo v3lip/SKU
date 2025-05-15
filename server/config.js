@@ -31,6 +31,16 @@ const config = {
     username: 'admin',
     password: 'admin',
     role: 'admin'
+<<<<<<< HEAD
+=======
+  },
+
+  // Database default data
+  DEFAULT_DATA: {
+    users: [],
+    files: [],
+    uploadKeys: []
+>>>>>>> temp-branch
   }
 };
 
